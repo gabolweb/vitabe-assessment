@@ -173,4 +173,68 @@ class AppointmentApiTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['service_id']);
     }
+
+    public function test_it_rejects_before_business_hours(): void
+    {
+        $service = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-15 07:30:00',
+        ])
+            ->assertUnprocessable();
+    }
+
+    public function test_it_rejects_after_business_hours(): void
+    {
+        $service = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-15 18:30:00',
+        ])
+            ->assertUnprocessable();
+    }
+
+    public function test_it_rejects_at_exact_closing(): void
+    {
+        $service = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-15 18:00:00',
+        ])
+            ->assertUnprocessable();
+    }
+
+    public function test_it_rejects_service_exceeding_business_hours(): void
+    {
+        $service = Service::create([
+            'name'         => 'Hidratacao Capilar',
+            'duration_min' => 60,
+            'active'       => true,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-15 17:30:00',
+        ])
+            ->assertUnprocessable();
+    }
 }
