@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Appointment;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class AppointmentConfirmation extends Notification
@@ -13,7 +14,16 @@ class AppointmentConfirmation extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['log'];
+        return ['mail'];
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('Appointment Confirmation')
+            ->line("Hi {$this->appointment->client_name}, your appointment has been scheduled.")
+            ->line('Start: ' . $this->appointment->starts_at->toDateTimeString())
+            ->line('End:   ' . $this->appointment->ends_at->toDateTimeString());
     }
 
     public function toArray(object $notifiable): array
