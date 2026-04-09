@@ -1,1 +1,5 @@
 .planning/
+.claude/
+.DS_Store
+CLAUDE.md
+docs/

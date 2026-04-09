@@ -1,0 +1,63 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: php
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - vitabee
+    depends_on:
+      - postgres
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=vitabee
+      - DB_USERNAME=vitabee
+      - DB_PASSWORD=secret
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - vitabee
+    depends_on:
+      - php
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: vitabee
+      POSTGRES_USER: vitabee
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - vitabee
+
+  node:
+    image: node:20-alpine
+    container_name: node
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    networks:
+      - vitabee
+    command: tail -f /dev/null
+
+networks:
+  vitabee:
+    driver: bridge
+
+volumes:
+  pgdata:

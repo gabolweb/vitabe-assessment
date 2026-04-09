@@ -1,0 +1,9 @@
+{
+  "name": "vitabee-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "echo 'Frontend not yet configured'",
+    "build": "echo 'Frontend not yet configured'"
+  }
+}
