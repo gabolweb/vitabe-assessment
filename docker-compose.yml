@@ -55,7 +55,7 @@ services:
       - ./frontend:/app
     networks:
       - vitabee
-    command: tail -f /dev/null
+    command: sh -c "npm install && npm run dev"
 
 networks:
   vitabee:
