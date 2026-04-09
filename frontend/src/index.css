@@ -1,3 +1,148 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: #F5F4F2;
+    color: #1C1917;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgba(249, 115, 22, 0.15);
+  }
+}
+
+@layer components {
+
+  /* Glass surface cards */
+  .card {
+    background: rgba(255,255,255,0.80);
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .card-hover:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.11);
+    transform: translateY(-1px);
+  }
+
+  /* Sticky header glass */
+  .header-glass {
+    background: rgba(245,244,242,0.88);
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Premium input */
+  .input-field {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(0,0,0,0.09);
+    background: rgba(255,255,255,0.75);
+    font-size: 0.875rem;
+    color: #1C1917;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .input-field::placeholder { color: #A8A49C; }
+  .input-field:focus {
+    border-color: #F97316;
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+    background: #FFFFFF;
+  }
+  .input-field.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.10);
+  }
+
+  /* Primary button */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 9px 18px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary {
+    background: #00285c;
+    color: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(0,40,92,0.25), 0 0 0 1px rgba(0,40,92,0.08);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #003478;
+    box-shadow: 0 4px 14px rgba(0,40,92,0.28);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  .btn-primary:disabled {
+    background: #D6D4CF;
+    color: #A8A49C;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: #78746C;
+    border: 1.5px solid rgba(0,0,0,0.10);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: rgba(0,0,0,0.04);
+    color: #292524;
+    border-color: rgba(0,0,0,0.14);
+  }
+
+  /* Shimmer skeleton */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: rgba(0,0,0,0.05);
+    border-radius: 12px;
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* Glass toast */
+  .toast-glass {
+    background: rgba(255,255,255,0.90);
+    border: 1px solid rgba(0,0,0,0.08);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 14px;
+  }
+}
