@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { Appointment } from '../types';
 
 interface AppointmentListProps {
@@ -44,8 +45,8 @@ export function AppointmentList({ appointments, loading }: AppointmentListProps)
         return (
           <div
             key={a.id}
-            className="card card-hover px-4 py-3.5 flex items-center gap-4 animate-slide-up"
-            style={{ animationDelay: `${i * 40}ms` }}
+            className="card card-hover px-4 py-3.5 flex items-center gap-4 animate-slide-up stagger-delay"
+            style={{ '--stagger-delay': `${i * 40}ms` } as React.CSSProperties}
           >
             {/* Date block */}
             <div className="flex-shrink-0 w-10 text-center">
@@ -64,10 +65,7 @@ export function AppointmentList({ appointments, loading }: AppointmentListProps)
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-stone-800 truncate">{a.client_name}</p>
               <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                <span
-                  className="text-[11px] font-medium px-2 py-0.5 rounded-full"
-                  style={{ color: '#00285c', background: 'rgba(0,40,92,0.08)', border: '1px solid rgba(0,40,92,0.15)' }}
-                >
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-full text-brand bg-brand/8 border border-brand/15">
                   {a.service.name}
                 </span>
                 <span className="text-[11px] text-stone-400">{time}</span>

@@ -9,8 +9,6 @@ import type { ToastState } from './types';
 
 type Tab = 'agendar' | 'historico';
 
-const PRIMARY = '#00285c';
-
 function App() {
   const [tab, setTab]     = useState<Tab>('agendar');
   const [toast, setToast] = useState<ToastState | null>(null);
@@ -23,14 +21,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-stone-100 flex flex-col items-center">
-      
+
       {/* Header — Inverted: Navy background, White content */}
-      <header className="sticky top-0 z-40 w-full flex justify-center shadow-md overflow-hidden" style={{ background: PRIMARY }}>
+      <header className="sticky top-0 z-40 w-full flex justify-center shadow-md overflow-hidden bg-brand">
         {/* Subtle glass effect on top of navy */}
         <div className="absolute inset-0 bg-white/5 backdrop-blur-md" />
-        
+
         <div className="relative w-full max-w-2xl px-4 sm:px-6 h-16 flex items-center justify-between">
-          
+
           {/* Logo — Expanded, no text */}
           <div className="flex items-center">
             <div className="w-14 h-14 flex items-center justify-center">
@@ -54,8 +52,7 @@ function App() {
                   <button
                     key={id}
                     onClick={() => setTab(id)}
-                    className="relative h-full px-3 text-[12px] font-bold tracking-widest uppercase transition-all duration-200"
-                    style={isActive ? { color: '#FFFFFF' } : { color: 'rgba(255,255,255,0.5)' }}
+                    className={`relative h-full px-3 text-[12px] font-bold tracking-widest uppercase transition-all duration-200 ${isActive ? 'text-white' : 'text-white/50'}`}
                   >
                     {label}
                     {isActive && (
@@ -70,7 +67,7 @@ function App() {
 
             {/* Notifications Badge */}
             {appointments.data.length > 0 && (
-              <span className="flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-white text-[#00285c]">
+              <span className="flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-white text-brand">
                 {appointments.data.length}
               </span>
             )}

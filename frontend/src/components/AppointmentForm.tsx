@@ -129,7 +129,7 @@ export function AppointmentForm({
               <div className="h-px bg-stone-200/60" />
               <div className="flex items-center justify-between text-sm">
                 <span className="text-stone-500">Horário</span>
-                <span className="font-bold" style={{ color: '#00285c' }}>{time}</span>
+                <span className="font-bold text-brand">{time}</span>
               </div>
             </div>
 

@@ -137,6 +137,16 @@
     100% { transform: translateX(100%); }
   }
 
+  /* Progress bar com duração configurável via CSS custom property */
+  .animate-progress-bar {
+    animation: progress var(--progress-duration, 4500ms) linear forwards;
+  }
+
+  /* Stagger delay via CSS custom property — para listas animadas */
+  .stagger-delay {
+    animation-delay: var(--stagger-delay, 0ms);
+  }
+
   /* Glass toast */
   .toast-glass {
     background: rgba(255,255,255,0.90);

@@ -1,3 +1,4 @@
+import type React from 'react';
 import { useEffect, useState, useCallback } from 'react';
 
 interface ToastProps {
@@ -91,8 +92,8 @@ export function Toast({ message, type, onDismiss, duration = 4500 }: ToastProps)
       {/* Progress bar */}
       <div className="h-[2px] bg-surface-100">
         <div
-          className={`h-full ${c.barColor} origin-left`}
-          style={{ animation: `progress ${duration}ms linear forwards` }}
+          className={`h-full ${c.barColor} origin-left animate-progress-bar`}
+          style={{ '--progress-duration': `${duration}ms` } as React.CSSProperties}
         />
       </div>
     </div>

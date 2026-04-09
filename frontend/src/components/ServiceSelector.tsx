@@ -110,10 +110,9 @@ export function ServiceSelector({ services, loading, error, selectedId, onSelect
                 onClick={() => onSelect(service)}
                 className={
                   sel
-                    ? 'relative text-left px-3 py-2.5 rounded-xl border transition-all duration-200 border-transparent shadow-md'
+                    ? 'relative text-left px-3 py-2.5 rounded-xl border transition-all duration-200 border-transparent shadow-md bg-brand'
                     : 'relative text-left px-3 py-2.5 rounded-xl border transition-all duration-200 bg-white border-stone-200 hover:border-stone-300 hover:shadow-sm'
                 }
-                style={sel ? { background: '#00285c' } : undefined}
               >
                 {/* Checkmark */}
                 {sel && (

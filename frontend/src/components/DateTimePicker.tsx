@@ -16,8 +16,6 @@ for (let h = 8; h < 18; h++) {
   TIME_SLOTS.push(`${String(h).padStart(2,'0')}:30`);
 }
 
-const PRIMARY = '#00285c';
-
 function pad(n: number) { return String(n).padStart(2,'0'); }
 function dateKey(y: number, m: number, d: number) { return `${y}-${pad(m+1)}-${pad(d)}`; }
 
@@ -102,13 +100,11 @@ export function DateTimePicker({ selectedDate, selectedTime, onDateChange, onTim
             const sel  = selectedDate === key;
 
             let cls = 'aspect-square rounded-lg text-xs transition-all duration-150 ';
-            let style: React.CSSProperties | undefined;
 
             if (past) {
               cls += 'text-stone-300 cursor-not-allowed';
             } else if (sel) {
-              cls += 'font-bold text-white shadow-sm';
-              style = { background: PRIMARY };
+              cls += 'font-bold text-white shadow-sm bg-brand';
             } else if (tod) {
               cls += 'font-semibold text-blue-700 bg-blue-50 ring-1 ring-blue-300';
             } else {
@@ -122,7 +118,6 @@ export function DateTimePicker({ selectedDate, selectedTime, onDateChange, onTim
                 onClick={() => !past && onDateChange(key)}
                 disabled={past}
                 className={cls}
-                style={style}
               >
                 {day}
               </button>
@@ -146,10 +141,9 @@ export function DateTimePicker({ selectedDate, selectedTime, onDateChange, onTim
                   type="button"
                   onClick={() => onTimeChange(time)}
                   className={sel
-                    ? 'text-xs font-bold py-2 px-2 rounded-lg border transition-all duration-150 text-white border-transparent shadow-sm'
+                    ? 'text-xs font-bold py-2 px-2 rounded-lg border transition-all duration-150 text-white border-transparent shadow-sm bg-brand'
                     : 'text-xs font-semibold py-2 px-2 rounded-lg border transition-all duration-150 border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 active:scale-95'
                   }
-                  style={sel ? { background: PRIMARY } : undefined}
                 >
                   {time}
                 </button>

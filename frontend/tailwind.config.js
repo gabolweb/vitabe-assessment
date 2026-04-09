@@ -7,6 +7,8 @@ export default {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
+        // Brand navy — cor primária do produto
+        brand: '#00285c',
         // Premium deep accent — não honey genérico
         accent: {
           50:  '#FFF7ED',
