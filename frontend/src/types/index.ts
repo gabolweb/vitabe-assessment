@@ -22,5 +22,5 @@ export interface CreateAppointmentPayload {
 
 export interface ToastState {
   message: string;
-  type: 'success' | 'error';
+  type: 'success' | 'error' | 'warning';
 }
