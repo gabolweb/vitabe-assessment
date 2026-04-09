@@ -22,10 +22,10 @@ class AppointmentApiTest extends TestCase
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 10:00:00',
+            'starts_at'   => '2027-12-15 10:00:00',
         ])
             ->assertCreated()
-            ->assertJsonPath('data.ends_at', '2025-12-15 10:30:00')
+            ->assertJsonPath('data.ends_at', '2027-12-15 10:30:00')
             ->assertJsonPath('data.duration_snapshot', 30);
 
         $this->assertDatabaseHas('appointments', [
@@ -45,8 +45,8 @@ class AppointmentApiTest extends TestCase
         Appointment::create([
             'client_name'       => 'Maria Silva',
             'service_id'        => $service->id,
-            'starts_at'         => '2025-12-15 10:00:00',
-            'ends_at'           => '2025-12-15 10:30:00',
+            'starts_at'         => '2027-12-15 10:00:00',
+            'ends_at'           => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
@@ -80,7 +80,7 @@ class AppointmentApiTest extends TestCase
 
         $this->postJson('/api/appointments', [
             'service_id' => $service->id,
-            'starts_at'  => '2025-12-15 10:00:00',
+            'starts_at'  => '2027-12-15 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['client_name']);
@@ -90,7 +90,7 @@ class AppointmentApiTest extends TestCase
     {
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'starts_at'   => '2025-12-15 10:00:00',
+            'starts_at'   => '2027-12-15 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['service_id']);
@@ -117,7 +117,7 @@ class AppointmentApiTest extends TestCase
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => 9999,
-            'starts_at'   => '2025-12-15 10:00:00',
+            'starts_at'   => '2027-12-15 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['service_id']);
@@ -168,7 +168,7 @@ class AppointmentApiTest extends TestCase
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 10:00:00',
+            'starts_at'   => '2027-12-15 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['service_id']);
@@ -185,7 +185,7 @@ class AppointmentApiTest extends TestCase
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 07:30:00',
+            'starts_at'   => '2027-12-15 07:30:00',
         ])
             ->assertUnprocessable();
     }
@@ -201,7 +201,7 @@ class AppointmentApiTest extends TestCase
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 18:30:00',
+            'starts_at'   => '2027-12-15 18:30:00',
         ])
             ->assertUnprocessable();
     }
@@ -217,7 +217,7 @@ class AppointmentApiTest extends TestCase
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 18:00:00',
+            'starts_at'   => '2027-12-15 18:00:00',
         ])
             ->assertUnprocessable();
     }
@@ -233,7 +233,7 @@ class AppointmentApiTest extends TestCase
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 17:30:00',
+            'starts_at'   => '2027-12-15 17:30:00',
         ])
             ->assertUnprocessable();
     }
@@ -249,15 +249,15 @@ class AppointmentApiTest extends TestCase
         Appointment::create([
             'client_name'       => 'João Costa',
             'service_id'        => $service->id,
-            'starts_at'         => '2025-12-15 10:00:00',
-            'ends_at'           => '2025-12-15 10:30:00',
+            'starts_at'         => '2027-12-15 10:00:00',
+            'ends_at'           => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 10:00:00',
+            'starts_at'   => '2027-12-15 10:00:00',
         ])
             ->assertStatus(409);
     }
@@ -273,15 +273,15 @@ class AppointmentApiTest extends TestCase
         Appointment::create([
             'client_name'       => 'João Costa',
             'service_id'        => $service->id,
-            'starts_at'         => '2025-12-15 10:00:00',
-            'ends_at'           => '2025-12-15 11:00:00',
+            'starts_at'         => '2027-12-15 10:00:00',
+            'ends_at'           => '2027-12-15 11:00:00',
             'duration_snapshot' => 60,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 10:30:00',
+            'starts_at'   => '2027-12-15 10:30:00',
         ])
             ->assertStatus(409);
     }
@@ -303,15 +303,15 @@ class AppointmentApiTest extends TestCase
         Appointment::create([
             'client_name'       => 'João Costa',
             'service_id'        => $serviceA->id,
-            'starts_at'         => '2025-12-15 10:00:00',
-            'ends_at'           => '2025-12-15 12:00:00',
+            'starts_at'         => '2027-12-15 10:00:00',
+            'ends_at'           => '2027-12-15 12:00:00',
             'duration_snapshot' => 120,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $serviceB->id,
-            'starts_at'   => '2025-12-15 10:30:00',
+            'starts_at'   => '2027-12-15 10:30:00',
         ])
             ->assertStatus(409);
     }
@@ -333,15 +333,15 @@ class AppointmentApiTest extends TestCase
         Appointment::create([
             'client_name'       => 'João Costa',
             'service_id'        => $serviceA->id,
-            'starts_at'         => '2025-12-15 10:30:00',
-            'ends_at'           => '2025-12-15 11:00:00',
+            'starts_at'         => '2027-12-15 10:30:00',
+            'ends_at'           => '2027-12-15 11:00:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $serviceB->id,
-            'starts_at'   => '2025-12-15 10:00:00',
+            'starts_at'   => '2027-12-15 10:00:00',
         ])
             ->assertStatus(409);
     }
@@ -357,15 +357,15 @@ class AppointmentApiTest extends TestCase
         Appointment::create([
             'client_name'       => 'João Costa',
             'service_id'        => $service->id,
-            'starts_at'         => '2025-12-15 10:00:00',
-            'ends_at'           => '2025-12-15 10:30:00',
+            'starts_at'         => '2027-12-15 10:00:00',
+            'ends_at'           => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 10:30:00',
+            'starts_at'   => '2027-12-15 10:30:00',
         ])
             ->assertCreated();
     }
@@ -381,15 +381,15 @@ class AppointmentApiTest extends TestCase
         Appointment::create([
             'client_name'       => 'João Costa',
             'service_id'        => $service->id,
-            'starts_at'         => '2025-12-15 10:00:00',
-            'ends_at'           => '2025-12-15 10:30:00',
+            'starts_at'         => '2027-12-15 10:00:00',
+            'ends_at'           => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-15 14:00:00',
+            'starts_at'   => '2027-12-15 14:00:00',
         ])
             ->assertCreated();
     }
@@ -405,15 +405,15 @@ class AppointmentApiTest extends TestCase
         Appointment::create([
             'client_name'       => 'João Costa',
             'service_id'        => $service->id,
-            'starts_at'         => '2025-12-15 10:00:00',
-            'ends_at'           => '2025-12-15 10:30:00',
+            'starts_at'         => '2027-12-15 10:00:00',
+            'ends_at'           => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
             'service_id'  => $service->id,
-            'starts_at'   => '2025-12-16 10:00:00',
+            'starts_at'   => '2027-12-16 10:00:00',
         ])
             ->assertCreated();
     }
