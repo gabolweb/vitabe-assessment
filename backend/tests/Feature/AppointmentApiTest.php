@@ -237,4 +237,184 @@ class AppointmentApiTest extends TestCase
         ])
             ->assertUnprocessable();
     }
+
+    public function test_it_rejects_exact_same_slot(): void
+    {
+        $service = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        Appointment::create([
+            'client_name'       => 'João Costa',
+            'service_id'        => $service->id,
+            'starts_at'         => '2025-12-15 10:00:00',
+            'ends_at'           => '2025-12-15 10:30:00',
+            'duration_snapshot' => 30,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-15 10:00:00',
+        ])
+            ->assertStatus(409);
+    }
+
+    public function test_it_rejects_overlapping_start(): void
+    {
+        $service = Service::create([
+            'name'         => 'Corte Feminino',
+            'duration_min' => 60,
+            'active'       => true,
+        ]);
+
+        Appointment::create([
+            'client_name'       => 'João Costa',
+            'service_id'        => $service->id,
+            'starts_at'         => '2025-12-15 10:00:00',
+            'ends_at'           => '2025-12-15 11:00:00',
+            'duration_snapshot' => 60,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-15 10:30:00',
+        ])
+            ->assertStatus(409);
+    }
+
+    public function test_it_rejects_contained_within_existing(): void
+    {
+        $serviceA = Service::create([
+            'name'         => 'Hidratacao Capilar',
+            'duration_min' => 120,
+            'active'       => true,
+        ]);
+
+        $serviceB = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        Appointment::create([
+            'client_name'       => 'João Costa',
+            'service_id'        => $serviceA->id,
+            'starts_at'         => '2025-12-15 10:00:00',
+            'ends_at'           => '2025-12-15 12:00:00',
+            'duration_snapshot' => 120,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $serviceB->id,
+            'starts_at'   => '2025-12-15 10:30:00',
+        ])
+            ->assertStatus(409);
+    }
+
+    public function test_it_rejects_encompassing_existing(): void
+    {
+        $serviceA = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        $serviceB = Service::create([
+            'name'         => 'Hidratacao Capilar',
+            'duration_min' => 120,
+            'active'       => true,
+        ]);
+
+        Appointment::create([
+            'client_name'       => 'João Costa',
+            'service_id'        => $serviceA->id,
+            'starts_at'         => '2025-12-15 10:30:00',
+            'ends_at'           => '2025-12-15 11:00:00',
+            'duration_snapshot' => 30,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $serviceB->id,
+            'starts_at'   => '2025-12-15 10:00:00',
+        ])
+            ->assertStatus(409);
+    }
+
+    public function test_it_allows_adjacent_appointments(): void
+    {
+        $service = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        Appointment::create([
+            'client_name'       => 'João Costa',
+            'service_id'        => $service->id,
+            'starts_at'         => '2025-12-15 10:00:00',
+            'ends_at'           => '2025-12-15 10:30:00',
+            'duration_snapshot' => 30,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-15 10:30:00',
+        ])
+            ->assertCreated();
+    }
+
+    public function test_it_allows_non_overlapping_same_day(): void
+    {
+        $service = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        Appointment::create([
+            'client_name'       => 'João Costa',
+            'service_id'        => $service->id,
+            'starts_at'         => '2025-12-15 10:00:00',
+            'ends_at'           => '2025-12-15 10:30:00',
+            'duration_snapshot' => 30,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-15 14:00:00',
+        ])
+            ->assertCreated();
+    }
+
+    public function test_it_allows_same_time_different_dates(): void
+    {
+        $service = Service::create([
+            'name'         => 'Corte Masculino',
+            'duration_min' => 30,
+            'active'       => true,
+        ]);
+
+        Appointment::create([
+            'client_name'       => 'João Costa',
+            'service_id'        => $service->id,
+            'starts_at'         => '2025-12-15 10:00:00',
+            'ends_at'           => '2025-12-15 10:30:00',
+            'duration_snapshot' => 30,
+        ]);
+
+        $this->postJson('/api/appointments', [
+            'client_name' => 'Maria Silva',
+            'service_id'  => $service->id,
+            'starts_at'   => '2025-12-16 10:00:00',
+        ])
+            ->assertCreated();
+    }
 }
