@@ -6,6 +6,7 @@ use App\Enums\BusinessHours;
 use App\Exceptions\SlotUnavailableException;
 use App\Models\Appointment;
 use App\Models\Service;
+use App\Notifications\AppointmentConfirmation;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
@@ -34,12 +35,18 @@ class AppointmentService
             throw new SlotUnavailableException();
         }
 
-        return Appointment::create([
+        $appointment = Appointment::create([
             'client_name'       => $data['client_name'],
             'service_id'        => $service->id,
             'starts_at'         => $startsAt,
             'ends_at'           => $endsAt,
             'duration_snapshot' => $service->duration_min,
         ]);
+
+        if (auth()->check()) {
+            auth()->user()->notify(new AppointmentConfirmation($appointment));
+        }
+
+        return $appointment;
     }
 }
