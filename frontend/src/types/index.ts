@@ -7,7 +7,6 @@ export interface Service {
 export interface Appointment {
   id: number;
   client_name: string;
-  data_hora: string;
   starts_at: string;
   ends_at: string;
   duration_snapshot: number;
