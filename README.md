@@ -513,7 +513,7 @@ docker exec php php artisan test --filter=it_allows_adjacent
 | Wizard 3 etapas | Formulário progressivo com step indicator | **UX**: reduz carga cognitiva, guia o usuário pelo fluxo |
 | Glass morphism design | Cards com backdrop-blur, transparência, sombras | **UI premium**: visual contemporâneo e agradável |
 | Skeleton loading | Shimmer animation durante carregamento | **Percepção**: feedback visual imediato, reduz sensação de lentidão |
-| Error translation (frontend) | Mapeamento de mensagens Laravel → pt-BR no cliente | **Acessibilidade linguística**: erros técnicos traduzidos para linguagem humana |
+| Error translation (frontend) | Mapeamento de mensagens Laravel → pt-BR no cliente | **Acessibilidade linguística**: erros técnicos traduzidos para linguagem humana amigável |
 
 ---
 
