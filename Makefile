@@ -18,7 +18,11 @@ logs:
 # ---------------------------------------------------------------------------
 # Backend — Laravel
 # ---------------------------------------------------------------------------
+install:
+	docker exec php composer install
+
 fresh:
+	docker exec php composer install
 	docker exec php php artisan key:generate --force
 	docker exec php php artisan migrate:fresh --seed
 
