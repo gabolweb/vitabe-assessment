@@ -22,7 +22,7 @@ install:
 	docker exec php composer install
 
 fresh:
-	docker exec php test -f .env || cp .env.example .env
+	docker exec php sh -c "[ -f .env ] || cp .env.example .env"
 	docker exec php composer install
 	docker exec php php artisan key:generate --force
 	docker exec php php artisan migrate:fresh --seed
@@ -52,7 +52,7 @@ build:
 # Production
 # ---------------------------------------------------------------------------
 prod-up:
-	docker exec php test -f .env || cp .env.example .env
+	docker exec php sh -c "[ -f .env ] || cp .env.example .env"
 	docker exec php composer install --no-dev --optimize-autoloader
 	docker exec php php artisan key:generate --force
 	docker compose up -d node
