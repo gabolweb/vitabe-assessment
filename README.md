@@ -359,6 +359,41 @@ O botão **"Admin"** no header abre um modal de login. Após autenticação, o t
 
 ---
 
+## Segurança — Considerações para Produção
+
+O sistema atual prioriza funcionalidade e clareza para o contexto de avaliação. Em um cenário de **acesso público real**, as seguintes camadas de segurança seriam implementadas:
+
+### 🔴 Críticas (Pré-deploy)
+
+| Medida | Descrição | Implementação Laravel |
+|--------|-----------|----------------------|
+| **HTTPS obrigatório** | Todo tráfego criptografado; cookies com `Secure` e `SameSite=Strict` | Nginx redirect 80→443 + `APP_URL=https://` + `SESSION_SECURE_COOKIE=true` |
+| **CORS restritivo** | Permitir apenas o domínio do frontend, não `*` | `config/cors.php` → `allowed_origins` com domínio específico |
+| **Validação e sanitização de input** | Prevenir XSS, SQL injection e mass assignment | Já implementado: Form Requests + Eloquent (prepared statements) + `$fillable` nos Models |
+| **Sanctum em rotas sensíveis** | Endpoints de escrita protegidos por token | ✅ Já implementado: `POST /appointments` e `DELETE /appointments/{id}` exigem `auth:sanctum` |
+
+### 🟡 Recomendadas (Primeira Iteração)
+
+| Medida | Descrição | Implementação Laravel |
+|--------|-----------|----------------------|
+| **Rate Limiting** | Limitar requisições por IP/usuário para prevenir abuso e DDoS simples | `ThrottleRequests` middleware — ex: `throttle:60,1` no grupo de rotas API |
+| **Throttle por IP no login** | Prevenir brute-force na rota de autenticação | `RateLimiter::for('login')` com limite de 5 tentativas/minuto |
+| **Headers de segurança** | `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security` | Middleware customizado ou configuração Nginx |
+| **Tokens com expiração** | Tokens Sanctum com TTL configurável | `config/sanctum.php` → `expiration` (ex: 60 minutos) |
+
+### 🟢 Desejáveis (Maturidade)
+
+| Medida | Descrição | Implementação Laravel |
+|--------|-----------|----------------------|
+| **Audit log** | Registrar quem criou/excluiu cada agendamento | Event listeners + tabela `audit_logs` ou pacote `spatie/laravel-activitylog` |
+| **CSP (Content Security Policy)** | Restringir origens de scripts, estilos e conexões | Header `Content-Security-Policy` via middleware |
+| **RBAC granular** | Roles (admin, atendente, cliente) com permissões específicas | `spatie/laravel-permission` ou Gates/Policies nativas |
+| **Dependências auditadas** | Scan automatizado de vulnerabilidades em pacotes | `composer audit` + `npm audit` no pipeline CI |
+
+> **Nota**: O Sanctum já implementado protege as rotas de escrita (`POST`, `DELETE`), e o Eloquent ORM previne SQL injection por design (prepared statements). A validação via Form Requests garante que nenhum input malformado atinja a camada de negócio. Para o escopo deste assessment, essas medidas fornecem uma base sólida — as camadas adicionais acima seriam priorizadas conforme o sistema evolui para produção.
+
+---
+
 ## Frontend — Design System
 
 ### Paleta de Cores
@@ -523,7 +558,6 @@ docker exec php php artisan test --filter=it_allows_adjacent
 |----------|---------|-------------|
 | `EXCLUDE USING gist` (PostgreSQL) | Integridade de overlap no banco — proteção contra race conditions | Média |
 | Cache de serviços (Redis) | Reduz queries no endpoint mais acessado | Baixa |
-| Rate limiting | Proteção contra abuso na API | Baixa |
 | Testes E2E (Cypress/Playwright) | Validação do fluxo completo no browser | Alta |
 | RBAC (Roles & Permissions) | Controle granular de acesso (admin, atendente, cliente) | Média |
 | Queue para notifications | Desacoplar envio de confirmação do request cycle | Baixa |
