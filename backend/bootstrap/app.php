@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (SlotUnavailableException $e, Request $request) {
             return response()->json([
-                'message' => 'Horario indisponivel.',
+                'message' => 'Horário indisponível. Já existe um agendamento neste período.',
             ], 409);
         });
     })->create();
