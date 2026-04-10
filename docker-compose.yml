@@ -10,13 +10,6 @@ services:
       - vitabe
     depends_on:
       - postgres
-    environment:
-      - DB_CONNECTION=pgsql
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_DATABASE=vitabe
-      - DB_USERNAME=vitabe
-      - DB_PASSWORD=secret
 
   nginx:
     image: nginx:alpine
