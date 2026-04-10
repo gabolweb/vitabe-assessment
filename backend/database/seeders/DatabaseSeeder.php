@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         $user = User::create([
             'name' => 'Admin vitabe',
             'email' => 'admin@vitabe.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('vitabe@2024'),
+            'password' => \Illuminate\Support\Facades\Hash::make('vitabe@2026'),
         ]);
 
         $user->tokens()->create([

@@ -169,7 +169,7 @@ curl http://localhost:8000/api/services
 # Login (obter token)
 curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@vitabe.com","password":"vitabe@2024"}'
+  -d '{"email":"admin@vitabe.com","password":"vitabe@2026"}'
 
 # Criar agendamento (com token)
 curl -X POST http://localhost:8000/api/appointments \
@@ -344,7 +344,7 @@ O sistema implementa autenticação via Laravel Sanctum com tokens de API:
 |-------|-------|
 | Nome | Admin vitabe |
 | E-mail | `admin@vitabe.com` |
-| Senha | `vitabe@2024` |
+| Senha | `vitabe@2026` |
 
 O seed também cria um token de desenvolvimento (`vitabe-dev-token`) usado pelo frontend em modo público para criar agendamentos sem login.
 

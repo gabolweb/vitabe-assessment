@@ -1,4 +1,4 @@
-.PHONY: up down fresh install test seed logs restart shell lint build prod-up prod-down
+.PHONY: up down fresh install test seed logs restart shell lint build prod-up prod-down reset prod-reset
 
 # ---------------------------------------------------------------------------
 # Docker
@@ -8,6 +8,14 @@ up:
 
 down:
 	docker compose down
+
+reset:
+	docker compose down -v --rmi local
+	rm -f backend/.env frontend/.env
+
+prod-reset:
+	docker compose -f docker-compose.yml -f docker-compose.prod.yml down -v --rmi local
+	rm -f backend/.env frontend/.env
 
 restart:
 	docker compose restart
@@ -23,8 +31,8 @@ install:
 	docker exec node npm install
 
 fresh:
-	docker exec php sh -c "[ -f .env ] || cp .env.example .env"
-	docker exec node sh -c "[ -f .env ] || cp .env.example .env"
+	docker exec php cp .env.example .env
+	docker exec node cp .env.example .env
 	docker exec php composer install
 	docker exec node npm install
 	docker exec php php artisan key:generate --force
@@ -56,13 +64,15 @@ build:
 # ---------------------------------------------------------------------------
 prod-up:
 	docker compose up -d php postgres node
-	docker exec php sh -c "[ -f .env ] || cp .env.example .env"
-	docker exec node sh -c "[ -f .env ] || cp .env.example .env"
+	docker exec php cp .env.example .env
+	docker exec node cp .env.example .env
 	docker exec php php artisan key:generate --force
 	docker exec php composer install --no-dev --optimize-autoloader
 	docker exec php php artisan migrate:fresh --seed --force
 	docker exec node npm install
 	docker exec node npm run build
+	docker exec php php artisan config:cache
+	docker exec php php artisan route:cache
 	docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
 
 prod-down:
