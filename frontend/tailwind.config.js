@@ -7,9 +7,7 @@ export default {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
-        // Brand navy — cor primária do produto
         brand: '#00285c',
-        // Premium deep accent — não honey genérico
         accent: {
           50:  '#FFF7ED',
           100: '#FFEDD5',
@@ -20,7 +18,6 @@ export default {
           600: '#EA580C',
           700: '#C2410C',
         },
-        // Surface palette — refinado, neutro quente
         surface: {
           0:   '#FFFFFF',
           50:  '#FAFAF9',
@@ -34,7 +31,6 @@ export default {
           800: '#292524',
           900: '#1C1917',
         },
-        // Estado selecionado — inverso premium
         selected: {
           bg:   '#1C1917',
           text: '#FFFFFF',
