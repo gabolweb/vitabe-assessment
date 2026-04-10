@@ -32,7 +32,7 @@
 
 ```bash
 # 1. Clone o repositório
-git clone <repo-url> && cd Vitabe-scheduling
+git clone <repo-url> && cd vitabe-assessment
 
 # 2. Suba todos os containers
 make up
@@ -44,7 +44,7 @@ make fresh
 Acesse:
 - **Frontend**: http://localhost:5173
 - **API**: http://localhost:8000/api/services
-- **PostgreSQL**: `localhost:5433` (user: `Vitabe` / password: `secret`)
+- **PostgreSQL**: `localhost:5433` (user: `vitabe` / password: `secret`)
 
 ### Referência de Comandos `make`
 
@@ -68,15 +68,15 @@ Acesse:
 
 Os testes PHPUnit utilizam o trait `RefreshDatabase` do Laravel, que executa `migrate:fresh` no banco de testes. Para **não destruir os dados de desenvolvimento**, o projeto configura um banco de dados isolado:
 
-- **Desenvolvimento**: `Vitabe` (porta 5433)
-- **Testes**: `Vitabe_test` (criado automaticamente via `docker/postgres/init.sql`)
+- **Desenvolvimento**: `vitabe` (porta 5433)
+- **Testes**: `vitabe_test` (criado automaticamente via `docker/postgres/init.sql`)
 
-O `phpunit.xml` define `DB_DATABASE=Vitabe_test`, garantindo que `make test` nunca afete os seeds ou dados do banco principal.
+O `phpunit.xml` define `DB_DATABASE=vitabe_test`, garantindo que `make test` nunca afete os seeds ou dados do banco principal.
 
 > **Nota**: Se os containers foram criados antes dessa configuração, remova o volume do postgres para recriar o banco de testes:
 > ```bash
 > make down
-> docker volume rm vitabi-schedule_pgdata
+> docker volume rm vitabe-assessment_pgdata
 > make up && make fresh
 > ```
 
@@ -85,7 +85,7 @@ O `phpunit.xml` define `DB_DATABASE=Vitabe_test`, garantindo que `make test` nun
 ## Estrutura do Projeto
 
 ```
-Vitabe-scheduling/
+vitabe-assessment/
 ├── docker/
 │   ├── nginx/
 │   │   ├── default.conf          # Nginx dev (proxy para PHP-FPM)
@@ -93,7 +93,7 @@ Vitabe-scheduling/
 │   ├── php/
 │   │   └── Dockerfile            # PHP 8.3-FPM + extensões PostgreSQL
 │   └── postgres/
-│       └── init.sql              # Cria banco Vitabe_test para PHPUnit
+│       └── init.sql              # Cria banco vitabe_test para PHPUnit
 ├── backend/                      # Laravel 11
 │   ├── app/
 │   │   ├── Enums/BusinessHours.php
@@ -169,7 +169,7 @@ curl http://localhost:8000/api/services
 # Login (obter token)
 curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@Vitabe.com","password":"Vitabe@2024"}'
+  -d '{"email":"admin@vitabe.com","password":"vitabe@2024"}'
 
 # Criar agendamento (com token)
 curl -X POST http://localhost:8000/api/appointments \
@@ -342,11 +342,11 @@ O sistema implementa autenticação via Laravel Sanctum com tokens de API:
 
 | Campo | Valor |
 |-------|-------|
-| Nome | Admin Vitabe |
-| E-mail | `admin@Vitabe.com` |
-| Senha | `Vitabe@2024` |
+| Nome | Admin vitabe |
+| E-mail | `admin@vitabe.com` |
+| Senha | `vitabe@2024` |
 
-O seed também cria um token de desenvolvimento (`Vitabe-dev-token`) usado pelo frontend em modo público para criar agendamentos sem login.
+O seed também cria um token de desenvolvimento (`vitabe-dev-token`) usado pelo frontend em modo público para criar agendamentos sem login.
 
 ### Modos do Frontend
 
@@ -506,7 +506,7 @@ docker exec php php artisan test --filter=it_allows_adjacent
 | Feature tests PHPUnit | 22 testes cobrindo happy paths, validações, business hours e overlaps | **Confiança**: demonstra disciplina de engenharia; qualquer refactor futuro é protegido |
 | `BusinessHours` Enum | Constantes tipadas para horários de funcionamento | **Legibilidade**: sem magic numbers `8` e `18` espalhados pelo código |
 | `AppointmentConfirmation` | Notification Laravel disparada após agendamento | **Diferencial**: simula integração com API externa de confirmação |
-| Banco de testes isolado | `Vitabe_test` via init.sql do PostgreSQL | **DX**: testes não destroem dados de desenvolvimento |
+| Banco de testes isolado | `vitabe_test` via init.sql do PostgreSQL | **DX**: testes não destroem dados de desenvolvimento |
 | `docker-compose.prod.yml` | Overlay para produção | **Deploy-ready**: frontend buildado servido via Nginx na porta 80 |
 | Modo Admin no frontend | Login/logout com Sanctum + exclusão de agendamentos | **Diferencial**: autenticação simples com UX completa |
 | `DELETE /appointments/{id}` | Endpoint de exclusão protegido por auth | **Gestão**: admin pode remover agendamentos |
