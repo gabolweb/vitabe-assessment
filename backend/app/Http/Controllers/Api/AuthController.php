@@ -13,11 +13,11 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $request->validate([
-            'email'    => ['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ], [
-            'email.required'    => 'Informe o e-mail.',
-            'email.email'       => 'E-mail inválido.',
+            'email.required' => 'Informe o e-mail.',
+            'email.email' => 'E-mail inválido.',
             'password.required' => 'Informe a senha.',
         ]);
 
@@ -31,7 +31,7 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user'  => ['name' => $user->name, 'email' => $user->email],
+            'user' => ['name' => $user->name, 'email' => $user->email],
         ]);
     }
 

@@ -21,15 +21,15 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 10:00:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
         ])
             ->assertCreated()
             ->assertJsonPath('data.ends_at', '2027-12-15 10:30:00')
@@ -37,7 +37,7 @@ class AppointmentApiTest extends TestCase
 
         $this->assertDatabaseHas('appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
+            'service_id' => $service->id,
         ]);
 
         Notification::assertSentTo(
@@ -49,16 +49,16 @@ class AppointmentApiTest extends TestCase
     public function test_it_lists_appointments_with_service_data(): void
     {
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         Appointment::create([
-            'client_name'       => 'Maria Silva',
-            'service_id'        => $service->id,
-            'starts_at'         => '2027-12-15 10:00:00',
-            'ends_at'           => '2027-12-15 10:30:00',
+            'client_name' => 'Maria Silva',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
+            'ends_at' => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
@@ -85,15 +85,15 @@ class AppointmentApiTest extends TestCase
     public function test_it_rejects_unauthenticated_request(): void
     {
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 10:00:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
         ])
             ->assertUnauthorized();
     }
@@ -103,14 +103,14 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'service_id' => $service->id,
-            'starts_at'  => '2027-12-15 10:00:00',
+            'starts_at' => '2027-12-15 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['client_name']);
@@ -122,7 +122,7 @@ class AppointmentApiTest extends TestCase
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'starts_at'   => '2027-12-15 10:00:00',
+            'starts_at' => '2027-12-15 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['service_id']);
@@ -133,14 +133,14 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
+            'service_id' => $service->id,
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['starts_at']);
@@ -152,8 +152,8 @@ class AppointmentApiTest extends TestCase
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => 9999,
-            'starts_at'   => '2027-12-15 10:00:00',
+            'service_id' => 9999,
+            'starts_at' => '2027-12-15 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['service_id']);
@@ -164,15 +164,15 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => 'not-a-date',
+            'service_id' => $service->id,
+            'starts_at' => 'not-a-date',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['starts_at']);
@@ -183,15 +183,15 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2020-01-01 10:00:00',
+            'service_id' => $service->id,
+            'starts_at' => '2020-01-01 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['starts_at']);
@@ -202,15 +202,15 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Inactive',
+            'name' => 'Inactive',
             'duration_min' => 30,
-            'active'       => false,
+            'active' => false,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 10:00:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['service_id']);
@@ -221,15 +221,15 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 07:30:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 07:30:00',
         ])
             ->assertUnprocessable();
     }
@@ -239,15 +239,15 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 18:30:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 18:30:00',
         ])
             ->assertUnprocessable();
     }
@@ -257,15 +257,15 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 18:00:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 18:00:00',
         ])
             ->assertUnprocessable();
     }
@@ -275,15 +275,15 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Hidratacao Capilar',
+            'name' => 'Hidratacao Capilar',
             'duration_min' => 60,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 17:30:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 17:30:00',
         ])
             ->assertUnprocessable();
     }
@@ -293,23 +293,23 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         Appointment::create([
-            'client_name'       => 'João Costa',
-            'service_id'        => $service->id,
-            'starts_at'         => '2027-12-15 10:00:00',
-            'ends_at'           => '2027-12-15 10:30:00',
+            'client_name' => 'João Costa',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
+            'ends_at' => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 10:00:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
         ])
             ->assertStatus(409);
     }
@@ -319,23 +319,23 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Feminino',
+            'name' => 'Corte Feminino',
             'duration_min' => 60,
-            'active'       => true,
+            'active' => true,
         ]);
 
         Appointment::create([
-            'client_name'       => 'João Costa',
-            'service_id'        => $service->id,
-            'starts_at'         => '2027-12-15 10:00:00',
-            'ends_at'           => '2027-12-15 11:00:00',
+            'client_name' => 'João Costa',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
+            'ends_at' => '2027-12-15 11:00:00',
             'duration_snapshot' => 60,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 10:30:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:30:00',
         ])
             ->assertStatus(409);
     }
@@ -345,29 +345,29 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $serviceA = Service::create([
-            'name'         => 'Hidratacao Capilar',
+            'name' => 'Hidratacao Capilar',
             'duration_min' => 120,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $serviceB = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         Appointment::create([
-            'client_name'       => 'João Costa',
-            'service_id'        => $serviceA->id,
-            'starts_at'         => '2027-12-15 10:00:00',
-            'ends_at'           => '2027-12-15 12:00:00',
+            'client_name' => 'João Costa',
+            'service_id' => $serviceA->id,
+            'starts_at' => '2027-12-15 10:00:00',
+            'ends_at' => '2027-12-15 12:00:00',
             'duration_snapshot' => 120,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $serviceB->id,
-            'starts_at'   => '2027-12-15 10:30:00',
+            'service_id' => $serviceB->id,
+            'starts_at' => '2027-12-15 10:30:00',
         ])
             ->assertStatus(409);
     }
@@ -377,29 +377,29 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $serviceA = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         $serviceB = Service::create([
-            'name'         => 'Hidratacao Capilar',
+            'name' => 'Hidratacao Capilar',
             'duration_min' => 120,
-            'active'       => true,
+            'active' => true,
         ]);
 
         Appointment::create([
-            'client_name'       => 'João Costa',
-            'service_id'        => $serviceA->id,
-            'starts_at'         => '2027-12-15 10:30:00',
-            'ends_at'           => '2027-12-15 11:00:00',
+            'client_name' => 'João Costa',
+            'service_id' => $serviceA->id,
+            'starts_at' => '2027-12-15 10:30:00',
+            'ends_at' => '2027-12-15 11:00:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $serviceB->id,
-            'starts_at'   => '2027-12-15 10:00:00',
+            'service_id' => $serviceB->id,
+            'starts_at' => '2027-12-15 10:00:00',
         ])
             ->assertStatus(409);
     }
@@ -410,23 +410,23 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         Appointment::create([
-            'client_name'       => 'João Costa',
-            'service_id'        => $service->id,
-            'starts_at'         => '2027-12-15 10:00:00',
-            'ends_at'           => '2027-12-15 10:30:00',
+            'client_name' => 'João Costa',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
+            'ends_at' => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 10:30:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:30:00',
         ])
             ->assertCreated();
     }
@@ -437,23 +437,23 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         Appointment::create([
-            'client_name'       => 'João Costa',
-            'service_id'        => $service->id,
-            'starts_at'         => '2027-12-15 10:00:00',
-            'ends_at'           => '2027-12-15 10:30:00',
+            'client_name' => 'João Costa',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
+            'ends_at' => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-15 14:00:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 14:00:00',
         ])
             ->assertCreated();
     }
@@ -464,23 +464,23 @@ class AppointmentApiTest extends TestCase
         Sanctum::actingAs(User::factory()->create());
 
         $service = Service::create([
-            'name'         => 'Corte Masculino',
+            'name' => 'Corte Masculino',
             'duration_min' => 30,
-            'active'       => true,
+            'active' => true,
         ]);
 
         Appointment::create([
-            'client_name'       => 'João Costa',
-            'service_id'        => $service->id,
-            'starts_at'         => '2027-12-15 10:00:00',
-            'ends_at'           => '2027-12-15 10:30:00',
+            'client_name' => 'João Costa',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-15 10:00:00',
+            'ends_at' => '2027-12-15 10:30:00',
             'duration_snapshot' => 30,
         ]);
 
         $this->postJson('/api/appointments', [
             'client_name' => 'Maria Silva',
-            'service_id'  => $service->id,
-            'starts_at'   => '2027-12-16 10:00:00',
+            'service_id' => $service->id,
+            'starts_at' => '2027-12-16 10:00:00',
         ])
             ->assertCreated();
     }

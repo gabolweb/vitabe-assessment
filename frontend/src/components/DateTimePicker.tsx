@@ -8,6 +8,8 @@ interface DateTimePickerProps {
   serviceDuration?: number;
 }
 
+const OPEN_HOUR = 8;
+const CLOSE_HOUR = 18;
 const WEEKDAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
@@ -23,8 +25,7 @@ export function DateTimePicker({ selectedDate, selectedTime, onDateChange, onTim
     const duration = serviceDuration || 30;
     const slots: string[] = [];
 
-    // Advance by the service duration; only include slots that fit before 18:00
-    for (let totalMin = 8 * 60; totalMin + duration <= 18 * 60; totalMin += duration) {
+    for (let totalMin = OPEN_HOUR * 60; totalMin + duration <= CLOSE_HOUR * 60; totalMin += duration) {
       const h = Math.floor(totalMin / 60);
       const m = totalMin % 60;
       slots.push(`${pad(h)}:${pad(m)}`);

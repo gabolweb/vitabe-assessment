@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Service, CreateAppointmentPayload } from '../types';
-import type { ApiError } from '../api/client';
+import { ApiError } from '../api/client';
 import { StepIndicator } from './StepIndicator';
 import { ServiceSelector } from './ServiceSelector';
 import { DateTimePicker } from './DateTimePicker';
@@ -16,28 +16,16 @@ interface AppointmentFormProps {
 
 const STEPS = ['Serviço', 'Horário', 'Confirmar'];
 
-const ERROR_MAP: Record<string, string> = {
-  'The starts at must be a date after now.': 'O horário selecionado já passou. Escolha uma data futura.',
-  'The starts at does not match the format Y-m-d H:i:s.': 'Data ou horário inválido. Tente novamente.',
-  'The selected service id is invalid.': 'O serviço selecionado não está disponível.',
-  'The client name field is required.': 'O nome do cliente é obrigatório.',
-  'The service id field is required.': 'Selecione um serviço.',
-  'The starts at field is required.': 'Informe a data e o horário do agendamento.',
-  'Unauthenticated.': 'Sessão expirada. Recarregue a página.',
-};
-
-function translate(msg: string) { return ERROR_MAP[msg] ?? msg; }
-
 export function AppointmentForm({
   services, servicesLoading, servicesError, onSubmit, onSuccess, onError,
 }: AppointmentFormProps) {
-  const [step, setStep]                     = useState(1);
-  const [service, setService]               = useState<Service | null>(null);
-  const [date, setDate]                     = useState('');
-  const [time, setTime]                     = useState('');
-  const [name, setName]                     = useState('');
-  const [submitting, setSubmitting]         = useState(false);
-  const [fieldErrors, setFieldErrors]       = useState<Record<string, string[]> | null>(null);
+  const [step, setStep] = useState(1);
+  const [service, setService] = useState<Service | null>(null);
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [name, setName] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]> | null>(null);
 
   const canNext1 = service !== null;
   const canNext2 = date !== '' && time !== '';
@@ -56,18 +44,19 @@ export function AppointmentForm({
       onSuccess();
       reset();
     } catch (err) {
-      const apiError = err as ApiError;
-      if (apiError.errors) {
-        const t: Record<string, string[]> = {};
-        for (const [k, v] of Object.entries(apiError.errors)) t[k] = v.map(translate);
-        setFieldErrors(t);
+      if (!(err instanceof ApiError)) {
+        onError(new ApiError(500, 'Erro inesperado. Tente novamente.'));
+        return;
       }
-      const msg = apiError.status === 409
+      if (err.errors) {
+        setFieldErrors(err.errors);
+      }
+      const msg = err.status === 409
         ? 'Este horário já está ocupado. Escolha outro.'
-        : apiError.errors
-          ? Object.values(apiError.errors).flat().map(translate)[0] ?? apiError.message
-          : translate(apiError.message);
-      onError({ ...apiError, message: msg } as ApiError);
+        : err.errors
+          ? Object.values(err.errors).flat()[0] ?? err.message
+          : err.message;
+      onError(new ApiError(err.status, msg, err.errors));
     } finally {
       setSubmitting(false);
     }

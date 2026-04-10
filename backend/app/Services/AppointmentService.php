@@ -18,7 +18,7 @@ class AppointmentService
         $startsAt = Carbon::parse($data['starts_at']);
         $endsAt = $startsAt->copy()->addMinutes($service->duration_min);
 
-        // BIZ-04: ends_at must not exceed closing time
+        // Rejeita agendamentos cujo término ultrapassa o horário de fechamento
         $closeHour = BusinessHours::CLOSE_HOUR->value;
         if ($endsAt->hour > $closeHour || ($endsAt->hour === $closeHour && $endsAt->minute > 0)) {
             throw ValidationException::withMessages([
@@ -36,10 +36,10 @@ class AppointmentService
         }
 
         $appointment = Appointment::create([
-            'client_name'       => $data['client_name'],
-            'service_id'        => $service->id,
-            'starts_at'         => $startsAt,
-            'ends_at'           => $endsAt,
+            'client_name' => $data['client_name'],
+            'service_id' => $service->id,
+            'starts_at' => $startsAt,
+            'ends_at' => $endsAt,
             'duration_snapshot' => $service->duration_min,
         ]);
 

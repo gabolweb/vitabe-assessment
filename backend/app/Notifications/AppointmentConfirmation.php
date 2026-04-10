@@ -30,9 +30,9 @@ class AppointmentConfirmation extends Notification
     {
         return [
             'appointment_id' => $this->appointment->id,
-            'client_name'    => $this->appointment->client_name,
-            'starts_at'      => $this->appointment->starts_at->toDateTimeString(),
-            'ends_at'        => $this->appointment->ends_at->toDateTimeString(),
+            'client_name' => $this->appointment->client_name,
+            'starts_at' => $this->appointment->starts_at->toDateTimeString(),
+            'ends_at' => $this->appointment->ends_at->toDateTimeString(),
         ];
     }
 }

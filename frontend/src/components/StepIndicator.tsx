@@ -4,30 +4,14 @@ interface StepIndicatorProps {
 }
 
 export function StepIndicator({ currentStep, steps }: StepIndicatorProps) {
-  // progress for N steps (3 steps -> 0, 50, 100)
   const progress = ((currentStep - 1) / (steps.length - 1)) * 100;
 
   return (
     <div className="flex justify-center w-full mb-10">
       <div className="relative w-full max-w-xl px-4">
 
-        {/* The Line Track (Centers of circles are at 16px from each edge of the 'ol') */}
         <div className="absolute top-4 left-4 right-4 h-0.5">
           <div className="relative w-full h-full">
-            {/* Background line (gray) */}
-            <div
-              className="absolute inset-y-0 left-4 right-4 bg-stone-100 rounded-full"
-            />
-
-            {/* Progress line (navy) — first pass */}
-            <div
-              className="absolute inset-y-0 left-4 transition-all duration-700 ease-in-out bg-brand"
-              style={{ width: `${progress}%` }}
-            >
-              <div className="h-full w-full" />
-            </div>
-
-            {/* Simpler, Bulletproof Line */}
             <div className="absolute inset-y-0 left-4 right-4">
               <div className="h-full w-full absolute transition-all duration-700 ease-in-out bg-stone-200" />
               <div
@@ -40,8 +24,8 @@ export function StepIndicator({ currentStep, steps }: StepIndicatorProps) {
 
         <ol className="relative z-10 flex justify-between items-start">
           {steps.map((label, index) => {
-            const stepNum     = index + 1;
-            const isActive    = stepNum === currentStep;
+            const stepNum = index + 1;
+            const isActive = stepNum === currentStep;
             const isCompleted = stepNum < currentStep;
 
             return (
