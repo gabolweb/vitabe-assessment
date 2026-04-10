@@ -1,0 +1,23 @@
+# docker-compose.prod.yml — Production overlay
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+#
+# Serves the built React SPA + Laravel API on port 80 via Nginx.
+# The "node" service is removed — frontend is pre-built.
+
+services:
+  nginx:
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/var/www/backend
+      - ./frontend/dist:/var/www/frontend
+      - ./docker/nginx/prod.conf:/etc/nginx/conf.d/default.conf
+
+  php:
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+
+  node:
+    profiles:
+      - disabled
