@@ -24,5 +24,10 @@ export function useAppointments() {
     fetchAppointments();
   };
 
-  return { data, loading, error, createAppointment };
+  const deleteAppointment = async (id: number) => {
+    await api.deleteAppointment(id);
+    fetchAppointments();
+  };
+
+  return { data, loading, error, createAppointment, deleteAppointment, refresh: fetchAppointments };
 }

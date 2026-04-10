@@ -24,3 +24,8 @@ export interface ToastState {
   message: string;
   type: 'success' | 'error' | 'warning';
 }
+
+export interface AdminUser {
+  name: string;
+  email: string;
+}

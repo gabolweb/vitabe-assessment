@@ -5,24 +5,32 @@ interface DateTimePickerProps {
   selectedTime: string;
   onDateChange: (date: string) => void;
   onTimeChange: (time: string) => void;
+  serviceDuration?: number;
 }
 
 const WEEKDAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-const TIME_SLOTS: string[] = [];
-for (let h = 8; h < 18; h++) {
-  TIME_SLOTS.push(`${String(h).padStart(2,'0')}:00`);
-  TIME_SLOTS.push(`${String(h).padStart(2,'0')}:30`);
-}
-
 function pad(n: number) { return String(n).padStart(2,'0'); }
 function dateKey(y: number, m: number, d: number) { return `${y}-${pad(m+1)}-${pad(d)}`; }
 
-export function DateTimePicker({ selectedDate, selectedTime, onDateChange, onTimeChange }: DateTimePickerProps) {
+export function DateTimePicker({ selectedDate, selectedTime, onDateChange, onTimeChange, serviceDuration }: DateTimePickerProps) {
   const now = new Date();
   const [viewY, setViewY] = useState(now.getFullYear());
   const [viewM, setViewM] = useState(now.getMonth());
+
+  const timeSlots = useMemo(() => {
+    const duration = serviceDuration || 30;
+    const slots: string[] = [];
+
+    // Advance by the service duration; only include slots that fit before 18:00
+    for (let totalMin = 8 * 60; totalMin + duration <= 18 * 60; totalMin += duration) {
+      const h = Math.floor(totalMin / 60);
+      const m = totalMin % 60;
+      slots.push(`${pad(h)}:${pad(m)}`);
+    }
+    return slots;
+  }, [serviceDuration]);
 
   const days = useMemo(() => {
     const firstDay    = new Date(viewY, viewM, 1).getDay();
@@ -133,7 +141,7 @@ export function DateTimePicker({ selectedDate, selectedTime, onDateChange, onTim
           <p className="text-xs text-stone-400 leading-snug">Selecione uma data primeiro</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-1 gap-1 max-h-[220px] overflow-y-auto">
-            {TIME_SLOTS.map((time) => {
+            {timeSlots.map((time) => {
               const sel = selectedTime === time;
               return (
                 <button
@@ -151,9 +159,6 @@ export function DateTimePicker({ selectedDate, selectedTime, onDateChange, onTim
             })}
           </div>
         )}
-        <p className="text-[9px] text-stone-300 mt-2 leading-snug">
-          Conflitos verificados ao confirmar
-        </p>
       </div>
     </div>
   );

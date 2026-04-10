@@ -17,9 +17,13 @@ interface AppointmentFormProps {
 const STEPS = ['Serviço', 'Horário', 'Confirmar'];
 
 const ERROR_MAP: Record<string, string> = {
-  'The starts at must be a date after now.': 'O horário selecionado já passou. Escolha um no futuro.',
+  'The starts at must be a date after now.': 'O horário selecionado já passou. Escolha uma data futura.',
   'The starts at does not match the format Y-m-d H:i:s.': 'Data ou horário inválido. Tente novamente.',
-  'The selected service id is invalid.': 'Serviço indisponível. Recarregue a página.',
+  'The selected service id is invalid.': 'O serviço selecionado não está disponível.',
+  'The client name field is required.': 'O nome do cliente é obrigatório.',
+  'The service id field is required.': 'Selecione um serviço.',
+  'The starts at field is required.': 'Informe a data e o horário do agendamento.',
+  'Unauthenticated.': 'Sessão expirada. Recarregue a página.',
 };
 
 function translate(msg: string) { return ERROR_MAP[msg] ?? msg; }
@@ -101,6 +105,7 @@ export function AppointmentForm({
               selectedTime={time}
               onDateChange={setDate}
               onTimeChange={setTime}
+              serviceDuration={service?.duration_min}
             />
           </div>
         )}
