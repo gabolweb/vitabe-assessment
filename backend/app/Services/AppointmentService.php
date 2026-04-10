@@ -22,7 +22,7 @@ class AppointmentService
         $closeHour = BusinessHours::CLOSE_HOUR->value;
         if ($endsAt->hour > $closeHour || ($endsAt->hour === $closeHour && $endsAt->minute > 0)) {
             throw ValidationException::withMessages([
-                'starts_at' => ['Servico excede o horario comercial.'],
+                'starts_at' => ['O serviço ultrapassa o horário de encerramento (18h). Escolha um horário mais cedo.'],
             ]);
         }
 
