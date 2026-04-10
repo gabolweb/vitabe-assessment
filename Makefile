@@ -1,4 +1,4 @@
-.PHONY: up down fresh test seed logs restart shell lint build
+.PHONY: up down fresh install test seed logs restart shell lint build prod-up prod-down
 
 # ---------------------------------------------------------------------------
 # Docker
@@ -22,6 +22,7 @@ install:
 	docker exec php composer install
 
 fresh:
+	docker exec php test -f .env || cp .env.example .env
 	docker exec php composer install
 	docker exec php php artisan key:generate --force
 	docker exec php php artisan migrate:fresh --seed
@@ -51,6 +52,9 @@ build:
 # Production
 # ---------------------------------------------------------------------------
 prod-up:
+	docker exec php test -f .env || cp .env.example .env
+	docker exec php composer install --no-dev --optimize-autoloader
+	docker exec php php artisan key:generate --force
 	docker compose up -d node
 	docker exec node npm run build
 	docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
