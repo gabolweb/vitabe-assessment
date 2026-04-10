@@ -20,10 +20,10 @@ class AppointmentConfirmation extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Appointment Confirmation')
-            ->line("Hi {$this->appointment->client_name}, your appointment has been scheduled.")
-            ->line('Start: ' . $this->appointment->starts_at->toDateTimeString())
-            ->line('End:   ' . $this->appointment->ends_at->toDateTimeString());
+            ->subject('Confirmação de Agendamento')
+            ->line("Olá {$this->appointment->client_name}, seu agendamento foi confirmado.")
+            ->line('Início: ' . $this->appointment->starts_at->format('d/m/Y H:i'))
+            ->line('Término: ' . $this->appointment->ends_at->format('d/m/Y H:i'));
     }
 
     public function toArray(object $notifiable): array
