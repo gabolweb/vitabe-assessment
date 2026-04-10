@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
 
         $user->tokens()->create([
             'name' => 'frontend',
-            'token' => hash('sha256', 'vitabe-dev-token'),
+            'token' => hash('sha256', env('FRONTEND_API_TOKEN', 'vitabe-dev-token')),
             'abilities' => ['*'],
         ]);
 

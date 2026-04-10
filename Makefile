@@ -55,13 +55,17 @@ build:
 # Production
 # ---------------------------------------------------------------------------
 prod-up:
+	docker compose up -d php node
 	docker exec php sh -c "[ -f .env ] || cp .env.example .env"
 	docker exec node sh -c "[ -f .env ] || cp .env.example .env"
-	docker exec php composer install --no-dev --optimize-autoloader
 	docker exec php php artisan key:generate --force
-	docker compose up -d node
+	@TOKEN=$$(openssl rand -base64 24 | tr -d /=+ | cut -c1-32); \
+	docker exec php sh -c "sed -i \"s/FRONTEND_API_TOKEN=.*/FRONTEND_API_TOKEN=$$TOKEN/\" .env"; \
+	docker exec node sh -c "sed -i \"s/VITE_API_TOKEN=.*/VITE_API_TOKEN=$$TOKEN/\" .env"
+	docker exec php composer install --no-dev --optimize-autoloader
 	docker exec node npm install
 	docker exec node npm run build
+	docker exec php php artisan migrate:fresh --seed --force
 	docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
 
 prod-down:
