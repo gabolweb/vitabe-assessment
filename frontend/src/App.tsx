@@ -13,8 +13,10 @@ function App() {
   const [tab, setTab] = useState<Tab>('agendar');
   const [toast, setToast] = useState<ToastState | null>(null);
   const [admin, setAdmin] = useState<AdminUser | null>(() => {
-    const saved = localStorage.getItem('admin_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('admin_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch { return null; }
   });
   const [showLogin, setShowLogin] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
@@ -40,10 +42,10 @@ function App() {
       await appointments.deleteAppointment(id);
       setToast({ message: 'Agendamento excluído.', type: 'success' });
     } catch (err) {
-      const apiErr = err as ApiError;
       appointments.refresh();
+      const apiErr = err instanceof ApiError ? err : null;
       setToast({
-        message: apiErr.status === 404
+        message: apiErr?.status === 404
           ? 'Agendamento não encontrado. A lista foi atualizada.'
           : 'Não foi possível excluir o agendamento. Tente novamente.',
         type: 'error',
@@ -65,8 +67,8 @@ function App() {
       setLoginPassword('');
       setTab('historico');
     } catch (err) {
-      const apiErr = err as ApiError;
-      setLoginError(apiErr.message ?? 'Erro ao autenticar. Tente novamente.');
+      const msg = err instanceof ApiError ? err.message : 'Erro ao autenticar. Tente novamente.';
+      setLoginError(msg);
     } finally {
       setLoginLoading(false);
     }

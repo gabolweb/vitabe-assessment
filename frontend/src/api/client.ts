@@ -51,7 +51,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   const text = await res.text();
-  return (text ? JSON.parse(text) : null) as T;
+  if (!text) return null as T;
+  try { return JSON.parse(text) as T; }
+  catch { throw new ApiError(res.status, 'Resposta inválida do servidor.'); }
 }
 
 export const api = {
