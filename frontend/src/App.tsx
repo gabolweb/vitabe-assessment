@@ -10,9 +10,9 @@ import type { ToastState, AdminUser } from './types';
 type Tab = 'agendar' | 'historico';
 
 function App() {
-  const [tab, setTab]         = useState<Tab>('agendar');
-  const [toast, setToast]     = useState<ToastState | null>(null);
-  const [admin, setAdmin]     = useState<AdminUser | null>(() => {
+  const [tab, setTab] = useState<Tab>('agendar');
+  const [toast, setToast] = useState<ToastState | null>(null);
+  const [admin, setAdmin] = useState<AdminUser | null>(() => {
     const saved = localStorage.getItem('admin_user');
     return saved ? JSON.parse(saved) : null;
   });
@@ -22,7 +22,7 @@ function App() {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loginLoading, setLoginLoading] = useState(false);
 
-  const services     = useServices();
+  const services = useServices();
   const appointments = useAppointments();
 
   const isAdmin = admin !== null && getAuthToken() !== null;
@@ -87,9 +87,9 @@ function App() {
   const tabs = isAdmin
     ? [{ id: 'historico' as Tab, label: 'Agendamentos' }]
     : [
-        { id: 'agendar' as Tab, label: 'Agendar' },
-        { id: 'historico' as Tab, label: 'Histórico' },
-      ];
+      { id: 'agendar' as Tab, label: 'Agendar' },
+      { id: 'historico' as Tab, label: 'Histórico' },
+    ];
 
   const activeTab = isAdmin ? 'historico' : tab;
 
@@ -195,7 +195,7 @@ function App() {
                   type="email"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
-                  placeholder="admin@vitabee.com"
+                  placeholder="admin@vitabe.com"
                   required
                   autoFocus
                   className="input-field"

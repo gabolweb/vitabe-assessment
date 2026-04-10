@@ -16,15 +16,15 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $user = User::factory()->create([
-            'name'     => 'Admin VitaBee',
-            'email'    => 'admin@vitabee.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('vitabee@2024'),
+            'name' => 'Admin vitabe',
+            'email' => 'admin@vitabe.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('vitabe@2024'),
         ]);
 
         $user->tokens()->create([
-            'name'       => 'frontend',
-            'token'      => hash('sha256', 'vitabee-dev-token'),
-            'abilities'  => ['*'],
+            'name' => 'frontend',
+            'token' => hash('sha256', 'vitabe-dev-token'),
+            'abilities' => ['*'],
         ]);
 
         $this->call(ServiceSeeder::class);
