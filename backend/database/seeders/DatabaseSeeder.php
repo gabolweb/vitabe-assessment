@@ -13,19 +13,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $user = \App\Models\User::firstOrCreate(
+            ['email' => 'admin@vitabe.com'],
+            [
+                'name' => 'Admin vitabe',
+                'password' => \Illuminate\Support\Facades\Hash::make('vitabe@2026'),
+            ]
+        );
 
-        $user = User::create([
-            'name' => 'Admin vitabe',
-            'email' => 'admin@vitabe.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('vitabe@2026'),
-        ]);
-
-        $user->tokens()->create([
-            'name' => 'frontend',
-            'token' => hash('sha256', env('FRONTEND_API_TOKEN', 'vitabe-dev-token')),
-            'abilities' => ['*'],
-        ]);
+        // Cria o token apenas se ainda não existir
+        if (! $user->tokens()->where('name', 'frontend')->exists()) {
+            $user->tokens()->create([
+                'name' => 'frontend',
+                'token' => hash('sha256', env('FRONTEND_API_TOKEN', 'vitabe-dev-token')),
+                'abilities' => ['*'],
+            ]);
+        }
 
         $this->call(ServiceSeeder::class);
     }
